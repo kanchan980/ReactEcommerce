@@ -1,0 +1,43 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "product": {
+      "type": "string"
+    },
+    "totalPrice": {
+      "type": "integer"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "In stock",
+        "out of stock"
+      ]
+    },
+    "Shippingaddress": {
+      "type": "string"
+    },
+    "paymentMethod": {
+      "type": "string"
+    },
+    "placeAt": {
+      "type": "date"
+    }
+  }
+}
