@@ -162,13 +162,8 @@ function Product() {
           active={activeTab === "products"}
           onClick={() => setActiveTab("products")}
         >
-          Products
-        </TabButton>
-        <TabButton
-          active={activeTab === "cart"}
-          onClick={() => setActiveTab("cart")}
-        >
-          Cart ({cart.length})
+        
+          
         </TabButton>
       </Tabs>
 

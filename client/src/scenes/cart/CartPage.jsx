@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import styled from "styled-components";
 import Checkout from "../checkout/Checkout";
 
-// API helper to fetch cart items
+// API helper
 const getCartItems = async () => {
   try {
     const res = await fetch("http://localhost:1337/api/carts?populate[product][populate]=*");
+    if (!res.ok) throw new Error("Failed to fetch cart");
     const data = await res.json();
     return data.data || [];
   } catch (err) {
@@ -42,48 +43,56 @@ const ProductImage = styled.img`
 function CartPage({ onBack }) {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [showCheckout, setShowCheckout] = useState(false);
 
-  // Fetch cart items
   useEffect(() => {
     const fetchCart = async () => {
-      const items = await getCartItems();
-      setCart(items);
-      setLoading(false);
+      setLoading(true);
+      setError("");
+      try {
+        const items = await getCartItems();
+        setCart(items);
+      } catch (err) {
+        setError("Unable to load cart. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
     };
     fetchCart();
   }, []);
 
-  // Remove item from cart
   const removeFromCart = async (cartId) => {
     try {
       const res = await fetch(`http://localhost:1337/api/carts/${cartId}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to remove item");
-      setCart(cart.filter((item) => item.id !== cartId));
+      setCart((prev) => prev.filter((item) => item.id !== cartId));
     } catch (err) {
       console.error(err);
       alert("Error removing item");
     }
   };
 
-  // Safely get product data
   const getProduct = (item) => item.attributes?.product?.data?.attributes || {};
-  
-  // Safely get price as number
   const getPrice = (item) => {
-    const price = item.attributes?.product?.data?.attributes?.price;
+    const price = getProduct(item)?.price;
     return !isNaN(price) ? Number(price) : 0;
   };
 
-  // Total price
   const totalPrice = cart.reduce((acc, item) => {
     const quantity = item.attributes?.quantity || 1;
     return acc + getPrice(item) * quantity;
   }, 0);
 
-  if (loading) return <Typography>Loading cart...</Typography>;
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" mt={10}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   if (showCheckout) {
     return (
@@ -99,6 +108,8 @@ function CartPage({ onBack }) {
     <Box width="90%" maxWidth="1000px" m="50px auto">
       <Typography variant="h4" mb={3}>Your Cart</Typography>
 
+      {error && <Typography color="error">{error}</Typography>}
+
       {cart.length === 0 ? (
         <Typography>Your cart is empty.</Typography>
       ) : (
@@ -106,15 +117,18 @@ function CartPage({ onBack }) {
           <ProductGrid>
             {cart.map((item) => {
               const product = getProduct(item);
-              const imgUrl = product.image?.data?.[0]?.attributes?.url
-                ? `http://localhost:1337${product.image.data[0].attributes.url}`
-                : "";
+              const imgUrl =
+                product.image?.data?.[0]?.attributes?.url
+                  ? `http://localhost:1337${product.image.data[0].attributes.url}`
+                  : "https://via.placeholder.com/180";
 
               return (
                 <ProductCard key={item.id}>
-                  <ProductImage src={imgUrl} alt={product.name} />
+                  <ProductImage src={imgUrl} alt={product.name || "Product"} />
                   <Typography variant="h6">{product.name || "No Name"}</Typography>
-                  <Typography>{product.description || ""}</Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    {product.description || ""}
+                  </Typography>
                   <Typography>Quantity: {item.attributes?.quantity || 1}</Typography>
                   <Typography fontWeight="bold">
                     Price: ${getPrice(item).toFixed(2)}

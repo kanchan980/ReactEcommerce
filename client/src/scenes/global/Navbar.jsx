@@ -1,25 +1,14 @@
 // src/components/Navbar.js
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Badge, Box, IconButton, Typography } from "@mui/material";
 import { FaShoppingCart } from "react-icons/fa";
-import { MenuOutlined } from "@mui/icons-material"; // removed FavoriteBorderOutlined
 import { shades } from "../../theme";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const cart = useSelector((state) => state.cart.cart);
-
-  const [products, setProducts] = useState([]);
-
-  // Fetch products for search (optional, can be removed)
-  useEffect(() => {
-    fetch("http://localhost:1337/api/products?populate=*")
-      .then((res) => res.json())
-      .then((data) => setProducts(data.data || []))
-      .catch(console.error);
-  }, []);
 
   return (
     <Box
@@ -53,7 +42,7 @@ export default function Navbar() {
           ECOMMER
         </Box>
 
-        {/* Navigation Links */}
+        {/* Navigation Links (desktop only) */}
         <Box display={{ xs: "none", md: "flex" }} columnGap="20px" alignItems="center">
           {["Home", "Product", "About", "Contact"].map((link) => (
             <Typography
@@ -69,9 +58,8 @@ export default function Navbar() {
           ))}
         </Box>
 
-        {/* Icons */}
+        {/* Cart Icon */}
         <Box display="flex" alignItems="center" columnGap="15px" zIndex="2">
-          {/* Cart Icon with Badge */}
           <Badge
             badgeContent={cart.length}
             color="secondary"
@@ -97,15 +85,6 @@ export default function Navbar() {
               <FaShoppingCart size={22} />
             </IconButton>
           </Badge>
-
-          {/* Mobile Menu */}
-          <IconButton
-            sx={{ color: "black", display: { xs: "flex", md: "none" } }}
-            onClick={() => navigate("/menu")}
-            disableRipple
-          >
-            <MenuOutlined />
-          </IconButton>
         </Box>
       </Box>
     </Box>

@@ -46,7 +46,7 @@ function About() {
     <div className="w-full bg-white text-gray-800 font-sans">
       
 
-      {/* Image Hero */}
+     
       <section style={{ position: "relative", background: "#f9fafb", padding: "80px 20px" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto", textAlign: "center" }}>
           <motion.img
@@ -73,29 +73,14 @@ function About() {
               Discover high-quality products at unbeatable prices. Shop with confidence
               and enjoy a seamless shopping experience, backed by our trusted customer service.
             </p>
-            <a
-              href="/products"
-              style={{
-                display: "inline-block",
-                background: "#16a34a",
-                color: "#fff",
-                padding: "12px 30px",
-                borderRadius: "8px",
-                fontWeight: "600",
-                textDecoration: "none",
-                boxShadow: "0 6px 15px rgba(0,0,0,0.15)",
-                transition: "all 0.3s ease",
-              }}
-              onMouseOver={(e) => (e.target.style.background = "#15803d")}
-              onMouseOut={(e) => (e.target.style.background = "#16a34a")}
-            >
+           
              
-            </a>
+          
           </div>
         </div>
       </section>
 
-      {/* Why Shop With Us */}
+     
       <section style={{ padding: "80px 20px", background: "#f9fafb" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto", textAlign: "center" }}>
           <h2 style={{ fontSize: "2.5rem", fontWeight: "bold", marginBottom: "50px", color: "#111827" }}>
@@ -132,7 +117,7 @@ function About() {
               </p>
             </motion.div>
 
-            {/* Card 2 */}
+        
             <motion.div
               style={{
                 background: "#e8f5e9",
